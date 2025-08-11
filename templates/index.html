@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Face Recognition Web App</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/script.js" defer></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial;
+      display: flex;
+      flex-direction: column;
+    }
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      gap: 16px;
+      padding: 12px;
+      overflow: hidden;
+    }
+    .left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .right h4 {
+      margin: 6px 0 4px;
+    }
+    .right input {
+      margin-bottom: 6px;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .button-group button {
+      flex: 1 0 30px;
+      padding: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background: #eee;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+    .button-group button:hover {
+      background: #ddd;
+    }
+    #result {
+      margin-top: 10px;
+      background: #f2f2f2;
+      padding: 8px;
+      border-radius: 5px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      font-size: 13px;
+      flex-grow: 1;
+    }
+    .left video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">Face Recognition Web App</h1>
+
+  <div class="container">
+    <!-- KIRI: Kamera -->
+    <div class="left">
+      <video id="video" autoplay></video>
+    
+      <!-- Tombol Auto-Identify Kecil -->
+      <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; z-index: 10;">
+        <button onclick="startAutoIdentify()" style="padding: 4px 6px; font-size: 12px;">▶️</button>
+        <button onclick="stopAutoIdentify()" style="padding: 4px 6px; font-size: 12px;">⏹️</button>
+      </div>
+    
+      <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+    
+
+    <!-- KANAN: Form & tombol -->
+    <div class="right">
+      <h4>🔐 API Token</h4>
+      <input type="text" id="token" placeholder="Paste token di sini">
+
+      <h4>📁 Gallery</h4>
+      <div class="button-group">
+        <button onclick="trigger('create_gallery')" title="Create Gallery">📁</button>
+        <button onclick="trigger('delete_gallery')" title="Delete Gallery">🗑️</button>
+        <button onclick="listGalleries()" title="List Gallery">📄</button>
+      </div>
+
+      <h4>📂 Active Gallery</h4>
+      <select id="static-gallery-dropdown" style="width: 50%; margin-bottom: 10px;">
+        <option>select</option>
+      </select>
+    
+
+      <h4>👤 Face</h4>
+      <div class="button-group">
+        <button onclick="trigger('enroll_face')" title="Enroll Face">➕</button>
+        <button onclick="trigger('verify_face')" title="Verify Face">✔️</button>
+        <button onclick="trigger('identify_face')" title="Identify Face">🔍</button>
+        <button onclick="trigger('delete_face')" title="Delete Face">❌</button>
+        <button onclick="listFaces()" title="List Faces">🧑‍🤝‍🧑</button>
+      </div>
+
+      <pre id="result"></pre>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h3 id="modal-title"></h3>
+      <div id="modal-body"></div>
+      <button onclick="submitModal()">Submit</button>
+      <button onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</body>
+</html>
+
